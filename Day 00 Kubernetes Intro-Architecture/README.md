@@ -10,7 +10,7 @@ Sure, I can help you with that. Here's a simple and sweet GitHub README for your
 
 Welcome to the repository for our video on **Kubernetes Architecture** and **Container Orchestration**. In this video, we explore the essentials of Kubernetes and Docker Swarm, two popular tools for managing containerized applications.
 
-![Kubernetes and Docker Swarm](path/to/your/image.jpg)
+![Kubernetes]
 
 ## Overview
 
