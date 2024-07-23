@@ -1,16 +1,9 @@
-# Architecture
+
 ![image](https://github.com/user-attachments/assets/4b8ab71c-429a-468b-baae-d4cd9f7334c2)
 
-
-Sure, I can help you with that. Here's a simple and sweet GitHub README for your Kubernetes Architecture and Container Orchestration video, based on the provided image:
-
----
-
-# Kubernetes Architecture and Container Orchestration
+# Kubernetes Architecture
 
 Welcome to the repository for our video on **Kubernetes Architecture** and **Container Orchestration**. In this video, we explore the essentials of Kubernetes and Docker Swarm, two popular tools for managing containerized applications.
-
-![Kubernetes]
 
 ## Overview
 
