@@ -1,6 +1,6 @@
 
+![5](https://github.com/user-attachments/assets/dccef0e4-4dd4-4465-a609-756ffb06b199)
 
-![a-captivating-youtube-thumbnail-for-a-kubernetes-s-4jMzYXaQQkyThuZsvkGMlw-Y9zX_N6gQ9yao6Bra44Kww](https://github.com/user-attachments/assets/847a1885-3fc2-4186-aab2-cce7a1e72ce7)
 
 
 
