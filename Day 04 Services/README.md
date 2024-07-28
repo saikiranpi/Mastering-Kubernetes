@@ -27,7 +27,8 @@
 
 1. Deploy a deployment and attach a ClusterIP service to it. Also, deploy the troubleshooting image.
    ```sh
-   kubectl run troubleshoot --image=kiran2361993/troubleshootingimage:v1
+   kubectl create deployment app1 --image kiran2361993/kubegame:v1 --replicas 3
+   kubectl expose deployment app1 --port 80 --target-port 80 --type ClusterIP
    ```
 
 2. Login to the troubleshoot pod and run the following commands:
