@@ -1,0 +1,156 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: development
+  labels:
+    name: development
+
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: object-counts
+  namespace: development
+spec:
+  hard:
+    requests.cpu: "1000m"
+    limits.cpu: "2000m"
+    requests.memory: 1Gi
+    limits.memory: 2Gi
+    pods: "10"
+    replicationcontrollers: "20"
+    resourcequotas: "10"
+    services: "5"
+
+---
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: cpu-memory-min-max-demo-lr
+  namespace: development
+spec:
+  limits:
+    - max:
+        cpu: "200m"
+        memory: 128Mi
+      min:
+        cpu: "100m"
+        memory: 100Mi
+      type: Container
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: adapter-container-deployment
+  labels:
+    env: prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      env: prod
+  template:
+    metadata:
+      labels:
+        env: prod
+    spec:
+      initContainers:
+        - name: init-container
+          image: alpine/git
+          command: ["/bin/sh"]
+          args:
+            [
+              "-c",
+              "git clone https://github.com/saikiranpi/Sidecar_Test.git /html",
+            ]
+        - name: wait-for-service
+          image: busybox
+          command:
+            [
+              "sh",
+              "-c",
+              "until nslookup myservice.default.svc.cluster.local; do echo waiting for myservice; sleep 2; done",
+            ]
+        - name: perform-task
+          image: busybox
+          command:
+            [
+              "sh",
+              "-c",
+              'echo "Init container tasks completed" > /tasks/status.txt',
+            ]
+          volumeMounts:
+            - name: shared-vol
+              mountPath: /tasks
+      containers:
+        - name: adapter-container
+          image: kiran2361993/kubegame:v1
+          command: ["/bin/sh"]
+          args:
+            [
+              "-c",
+              "while true; do echo \\<h1\\>$(date)\\</h1\\> >> /html/index.html; sleep 5; done",
+            ]
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: shared-vol
+              mountPath: /html/
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "200m"
+              memory: "512Mi"
+        - name: main-container
+          image: kiran2361993/kubegame:v1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: shared-vol
+              mountPath: /usr/share/nginx/html/
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "200m"
+              memory: "512Mi"
+      volumes:
+        - name: shared-vol
+          emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: adapter-container-service
+  labels:
+    env: prod
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    env: prod
+  type: NodePort
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myservice
+  labels:
+    env: prod
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+  selector:
+    env: prod
+  type: NodePort
