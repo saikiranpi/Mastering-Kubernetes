@@ -1,0 +1,24 @@
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: user1-role
+  namespace: development
+rules:
+  - apiGroups: ["", "apps", "networking.k8s.io"] # "" indicates the core API group for eacho use '' not "".
+
+    resources:
+      ["pods", "deployments", "replicasets", "nodes", "ingress", "services"]
+    verbs: ["get", "update", "list", "create", "delete"]
+
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: user2-role
+  namespace: production
+rules:
+  - apiGroups: ["", "apps", "networking.k8s.io"] # "" indicates the core API group for eacho use '' not "".
+
+    resources:
+      ["pods", "deployments", "replicasets", "nodes", "ingress", "services"]
+    verbs: ["get", "update", "list", "create", "delete"]
