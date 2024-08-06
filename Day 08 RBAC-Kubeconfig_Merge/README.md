@@ -1,5 +1,5 @@
 
-![a-captivating-thumbnail-concept-for-a-kubernetes-r-dI9hfXL_TDK-RFxhKkQM7g-Pe7hg8EwSqW2lXlnt-3DNw](https://github.com/user-attachments/assets/92d2a9f9-b7e2-4006-9269-44f2b73ee5e4)
+![a-captivating-thumbnail-concept-for-a-kubernetes-r-dI9hfXL_TDK-RFxhKkQM7g-Pe7hg8EwSqW2lXlnt-3DNw](https://github.com/user-attachments/assets/5e278522-6e08-4538-80ec-b6a138fde2a5)
 
 # Kubernetes RBAC Setup Guide
 
