@@ -58,8 +58,8 @@ kubectl exec -it <pod_name> -- aws s3 ls
 3. **Create Generic Secrets**
 
 ```bash
-kubectl create secret generic db-user --from-literal=username=kiran1103
-kubectl create secret generic db-pass --from-literal=password='MasteringCloud123'
+kubectl create secret generic db-user --from-literal=username=XXXXXX
+kubectl create secret generic db-pass --from-literal=password='XXXXXXXXXXXX'
 kubectl get secrets
 kubectl get secret db-user -o jsonpath="{.data.username}" | base64 --decode
 kubectl get secret db-pass -o jsonpath="{.data.password}" | base64 --decode
