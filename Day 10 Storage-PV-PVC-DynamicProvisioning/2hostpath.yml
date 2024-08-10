@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: containerd-deamonset
+  labels:
+    app: containerd-deamonset
+spec:
+  selector:
+    matchLabels:
+      app: containerd-deamonset
+  template:
+    metadata:
+      labels:
+        app: containerd-deamonset
+    spec:
+      containers:
+      - name: troubleshooting
+        image: kiran2361993/troubleshootingtools:v1 
+        volumeMounts:
+          - name: containerdsock
+            mountPath: "/run/containerd/containerd.sock"
+      volumes:
+        - name: containerdsock
+          hostPath:
+            path: /run/containerd/containerd.sock
+
+
+#commands to install
+# apt-get update -y && apt-get install -f containerd
+# ctr image pull docker.io/library/hello-world:latest
+# ctr container ls
