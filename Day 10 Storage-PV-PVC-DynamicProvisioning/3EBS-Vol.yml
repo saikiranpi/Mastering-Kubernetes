@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-deployment
+  labels:
+    app: mongodb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb
+      name: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+        name: mongodb
+    spec:
+      containers:
+      - image: mongo
+        name: mongodb
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: mongodb-data
+          mountPath: /data/db
+      volumes:
+      - name: mongodb-data
+        awsElasticBlockStore:
+           volumeID: vol-016f2bbb6f3e82c1d
+           fsType: ext4
+      nodeSelector:
+          kubernetes.io/hostname: i-0eabc073991b3166c
+
+
+# db.movie.insert({"name":"Fast & Furious 1"})
+# db.movie.insert({"name":"Fast & Furious 2"})
+# db.movie.insert({"name":"Fast & Furious 3"})
+# db.movie.insert({"name":"Fast & Furious 4"})
+# db.movie.insert({"name":"Fast & Furious 5"})
+# db.movie.insert({"name":"Fast & Furious 6"})
+
+# > show dbs
+# > show collections 
+# > db.movie.find()
