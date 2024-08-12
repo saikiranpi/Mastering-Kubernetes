@@ -44,11 +44,6 @@ This repository provides examples and explanations of different Kubernetes stora
    ```bash
    docker version
    ```
-3. In VS Code, enter the host path and note that it connects to the host’s Docker socket.
-
-### EBS Example
-1. Create a 5GB EBS volume and tag it with `KubernetesCluster: cloudvishwakarma.in`.
-2. Note the dependency on cloud admins for volume management.
 
 ### Persistent Volume and Claim
 1. Create 5 PVs.
