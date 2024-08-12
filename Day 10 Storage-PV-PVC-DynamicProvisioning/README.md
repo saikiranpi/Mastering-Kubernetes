@@ -16,10 +16,6 @@ This repository provides examples and explanations of different Kubernetes stora
 - **Purpose**: Mounts a directory from the host machine into the pod.
 - **Example**: You can use `HostPath` to access Docker’s Unix socket at `/var/run/docker.sock` from inside the container. This lets the container communicate with Docker on the host.
 
-### EBS (Elastic Block Store)
-- **Purpose**: Provides persistent block storage that can be attached to pods.
-- **Challenges**: Requires cloud administrator intervention to create and manage EBS volumes, which can be a bottleneck if the admin is unavailable.
-
 ### Persistent Volume (PV)
 - **Purpose**: Represents a piece of storage in the cluster that has been provisioned by an administrator.
 - **Details**: PVs are managed by the cluster and can be dynamically provisioned using storage classes.
