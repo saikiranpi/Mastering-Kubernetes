@@ -1,0 +1,44 @@
+ku run trouble1 --image=kiran2361993/troubleshootingtools:v1 -n default
+ku run trouble2 --image=kiran2361993/troubleshootingtools:v1 -n default
+
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: deny-ingress
+  namespace: default
+spec:
+  podSelector: 
+    matchLabels:
+      run: trouble1
+  policyTypes:
+  - Ingress
+
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: deny-egress
+  namespace: default
+spec:
+  podSelector: 
+    matchLabels:
+      run: trouble1
+  policyTypes:
+  - Egress
+
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: deny-ingress-egress
+  namespace: default
+spec:
+  podSelector: 
+    matchLabels:
+      run: trouble1
+  policyTypes:
+  - Ingress
+  - Egress
+  
+  
