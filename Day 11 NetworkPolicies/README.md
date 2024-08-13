@@ -1,5 +1,6 @@
 ![a-3d-rendering-of-a-modern-futuristic-data-center--Zf8_hn_pRcyGryPlC5p7ng-QH0BY5aORJKea1KsqNyvCw](https://github.com/user-attachments/assets/6ea61135-120e-49f8-b5fb-29f52980ff8a)
 
+
 Here’s an expanded description with additional details about networking:
 
 ---
@@ -53,6 +54,26 @@ This repository contains a collection of YAML configuration files designed to ma
 - **Calico.sh**  
   This script automates the application of the above network policies using Calico, simplifying the process of enforcing security rules within the Kubernetes cluster.
 
+### How to Use:
+
+1. Clone the repository:
+   ```bash
+   git clone [https://github.com/yourusername/kubernetes-network-policies.git](https://github.com/saikiranpi/Mastering-Kubernetes)
+   ```
+
+2. Navigate to the directory:
+   ```bash
+   cd kubernetes-network-policies
+   ```
+
+3. Apply the desired network policy:
+   ```bash
+   kubectl apply -f 0-deny-traffic-inside-namespace.yaml
+   ```
+
+4. Run the `Calico.sh` script to apply all policies at once:
+   ```bash
+   bash Calico.sh
    ```
 
 ### Contributions
@@ -62,8 +83,5 @@ Contributions are welcome! Feel free to submit a pull request or open an issue t
 ### License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
 
 
