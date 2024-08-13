@@ -1,0 +1,24 @@
+#This Policy Will Allow Traffic Between PODs in prod NS with Label ns=prod
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-traffic-within-prod-namespace
+  namespace: prod
+spec:
+  podSelector: 
+   matchLabels:
+    ns: prod
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          ns: prod
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          ns: prod
