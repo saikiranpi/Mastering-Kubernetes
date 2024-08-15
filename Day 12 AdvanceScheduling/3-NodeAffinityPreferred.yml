@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: preferred-soft
+  name: preferred-soft
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      run: preferred-soft
+  template:
+    metadata:
+      labels:
+        run: preferred-soft
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 40
+            preference:
+              matchExpressions:
+              - key: env
+                operator: In
+                values:
+                - one
+          - weight: 30
+            preference:
+              matchExpressions:
+              - key: env
+                operator: In
+                values:
+                - two
+          - weight: 30
+            preference:
+              matchExpressions:
+              - key: env
+                operator: In
+                values:
+                - three
+      containers:
+      - image: nginx
+        name: deploy01
