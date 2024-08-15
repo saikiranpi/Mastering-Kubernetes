@@ -70,3 +70,9 @@ spec:
         name: nginx
 
 
+# ku taint node nodeid high-cpu=yes:NoExecute
+# ku taint node nodeid med-cpu=yes:NoExecute 
+# ku taint node nodeid low-cpu=yes:NoExecute 
+
+
+
