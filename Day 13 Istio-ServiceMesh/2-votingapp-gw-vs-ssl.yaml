@@ -1,0 +1,75 @@
+# kubectl create secret tls my-tls-secret --key="tls.key" --cert="tls.crt" -n istio-system
+# kubectl create secret tls my-tls-secret --key="tls.key" --cert="tls.crt" -n default
+---
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway #Similar to Kubernetes Ingress
+metadata:
+  name: app-gateway
+spec:
+  selector:
+    istio: ingressgateway # label of ingressgateway deployed above
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "vote.cloudvishwakarma.in"
+    - "result.cloudvishwakarma.in"
+    - "www.cloudvishwakarma.in"
+    tls:
+     httpsRedirect: true
+  - port:
+      number: 443
+      name: https
+      protocol: HTTPS
+    hosts:
+    - "vote.cloudvishwakarma.in"
+    - "result.cloudvishwakarma.in"
+    - "www.cloudvishwakarma.in"
+    tls:
+      credentialName: my-tls-secret # this should match with Certificate secretName
+      mode: SIMPLE
+      privateKey: sds
+      serverCertificate: sds
+
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: vote
+spec:
+  hosts:
+  - "vote.cloudvishwakarma.in"
+  - "www.cloudvishwakarma.in"
+  gateways:
+  - app-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: vote
+        port:
+          number: 80
+
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: result
+spec:
+  hosts:
+  - "result.cloudvishwakarma.in"
+  gateways:
+  - app-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: result
+        port:
+          number: 80
