@@ -1,0 +1,69 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: tools-gateway
+  namespace: istio-system
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "tools.cloudvishwakarma.in"
+    tls:
+     httpsRedirect: true
+  - port:
+      number: 443
+      name: https
+      protocol: HTTPS
+    hosts:
+    - "tools.cloudvishwakarma.in"
+    tls:
+      credentialName: my-tls-secret # this should match with Certificate secretName
+      mode: SIMPLE
+      privateKey: sds
+      serverCertificate: sds
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: kiali
+  namespace: istio-system
+spec:
+  hosts:
+  - "tools.cloudvishwakarma.in"
+  gateways:
+  - tools-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /kiali
+    route:
+    - destination:
+        host: kiali
+        port:
+          number: 20001
+
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: tracing
+  namespace: istio-system
+spec:
+  hosts:
+  - "tools.cloudvishwakarma.in"
+  gateways:
+  - tools-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /jaeger
+    route:
+    - destination:
+        host: tracing
+        port:
+          number: 80
