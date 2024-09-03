@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: production
+resources:
+- ../../base
+
+replicas:
+- name: nginx001
+  count: 4
+
+images:
+- name: hello123
+  newName: kiran2361993/kubegame
+  newTag: v2
+
+
+#kustomize edit set image kiran2361993/kubegame
+#kustomize edit set replicas nginx001=20
+#https://levelup.gitconnected.com/kubernetes-change-base-yaml-config-for-different-environments-prod-test-6224bfb6cdd6
+#https://devpress.csdn.net/cicd/62ec22ba89d9027116a103e6.html
