@@ -1,0 +1,161 @@
+# Create 1 t2-Large Instance with 20gb 
+
+# Create IAM USER with Administrator access or individual access anything is fine 
+# AmazonEKSClusterPolicy
+# AmazonEKSWorkerNodePolicy
+# AmazonEKSServicePolicy
+
+# Install unzip and AWSCLI 
+
+#sudo apt update && sudo apt install unzip -y
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+
+# aws configure and pass the keys. 
+
+# install kubectl
+
+curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
+sudo mv ./kubectl /usr/local/bin/kubectl
+chmod 777 /usr/local/bin/kubectl
+kubectl version -short
+
+# install eksctl
+
+curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+sudo mv /tmp/eksctl /usr/local/bin
+sudo chmod 700 /usr/local/bin/eksctl
+eksctl version
+
+#deploy control plane to delete ""eksctl delete cluster --name eks-cluster-1"""
+
+eksctl create cluster \
+--name eks-cluster-1 \
+--version 1.29 \
+--zones=us-east-1a,us-east-1b,us-east-1c \
+--without-nodegroup
+
+#Install java & jenkins
+
+sudo apt install -y openjdk-11-jdk
+
+
+#INSTALL  REQUIRED PLUGINS 
+#  AWS
+
+#kustomization
+
+#Once Cluster is up 
+export KUBECONFIG=/root/.kube/config
+
+# check cluster-info
+
+# Now we need to install nodePools before that we need to do OIDC authentication. 
+
+eksctl utils associate-iam-oidc-provider \
+	--region us-east-1 \
+	--cluster eks-cluster-1 \
+	--approve
+
+# create nodegroup, If production go with the private . We using local so lets o with the Public only.
+
+#For Node Group In Public Subnet
+
+eksctl create nodegroup --cluster=eks-cluster-1 \
+--region=us-east-1 \
+--name=eks-cluster-1-cluster-ng-1 \
+--node-type=t3.medium \
+--nodes=2 \
+--nodes-min=2 \
+--nodes-max=4 \
+--node-volume-size=20 \
+--ssh-access \
+--ssh-public-key=QA-Account \
+--managed \
+--asg-access \
+--external-dns-access \
+--full-ecr-access \
+--appmesh-access \
+--alb-ingress-access
+
+# #For Node Group In Private
+# eksctl create nodegroup --cluster=k8sb02-cluster \
+# --region=us-east-1 \
+# --name=k8sb02-cluster-ng-2 \
+# --node-type=t3.medium \
+# --nodes=1 \
+# --nodes-min=2 \
+# --nodes-max=4 \
+# --node-volume-size=20 \
+# --ssh-access \
+# --ssh-public-key=LaptopKey \
+# --managed \
+# --asg-access \
+# --external-dns-access \
+# --full-ecr-access \
+# --appmesh-access \
+# --alb-ingress-access \
+# --node-private-networking    
+
+#Smoketest
+ku get pods -A
+ku get ns 
+ku get all -n kube-system
+
+
+# NOW THE TASK IS OUR JENKINS SERVER SHOULD BE INTEGARTED WITH THE EKS 
+# WE WLL DO IT IN A CREDENTIAL PLUGIN WAY 
+
+# jenkins > credentials  > system > global > Awscred > Global > aws-access-creds - copy paste the keys
+
+
+# Now create a dummy pipeline and check if it is working or not 
+
+#Create a job with pipeline
+# sh 'aws eks --region us-east-1 update-kubeconfig --name eks-cluster-1'
+# sh 'kubectl get pods -A' 
+
+#My task is  Depending upon branch if development branch it should deploy on development namespace - If it is production branch it should deploy on procustion namespace. 
+
+# LETS-CREATE A PRIVATE GITHUB REPOSITORY AND MAKE A HANDSHAKE METHOD BETWEEN GITHUB AND JENKINS 
+ 
+ su - jenkins
+ ssh-keyhen #generating ket for authentication. 
+
+ add these keys to your jenkins SERVER
+ Jenkins > manage Jenkins > credentials > system > global 
+ ssh-username-with-private-key
+ github-access
+ jenkins > add-directly
+ paste the private key
+
+ -NOW ON GITHUB PRIVATE REPO WITH PUBLIC key
+ CAT PUBLICKKEY
+
+ now create a developmnet branch and push the code to private REPO
+
+ for automatic trigger need to add a plugin on jenins server  called 'multi branch scan webhook triger '
+
+ Create a new pipeline with Multibranch and select git and give the credentials accoridngly . 
+
+ You will get error which took 2 hours to resolve got to manage jenkins   > Security > turnoff host key verification
+
+# do dummy testing by creating the file and push , Automatically a build should be starated when you select scan multibranch pipeline 
+
+
+Once done Install kustomize
+
+cd /usr/local/bin
+https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv5.2.1/kustomize_v5.2.1_linux_amd64.tar.gz
+
+
+
+# Now i want auto commit not by just clicking on multibranch pipeline 
+multibranch jenkins > confgure > scan multibranch > Scan Multibranch Pipeline Triggers > scan by webhook > and carefully give the webhook accordingly. 
+
+http://ec2-3-231-161-7.compute-1.amazonaws.com:8080/multibranch-webhook-trigger/invoke?token=eks-cluster-1
+
+ADD THE SAME ON GITHUB WEBHOOKS TOO
+
+delete ""eksctl delete cluster --name eks-cluster-1""
