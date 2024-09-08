@@ -1,3 +1,6 @@
+![a-3d-render-of-a-youtube-thumbnail-with-a-gradient-PStxY4DSSoy9tgpoStCoYg-AM_brcX1QVC6Mk6Pb45qfA](https://github.com/user-attachments/assets/6cb9e1de-0eaf-43ee-9d67-1c7767f69d14)
+
+
 # Kubernetes Metrics Server & Horizontal Pod Autoscaling
 
 This repository provides a detailed guide on setting up Kubernetes Metrics Server and implementing Horizontal Pod Autoscaling (HPA). The steps and explanations are based on the article: [Kubernetes Metrics Server & Horizontal Pod Autoscaling](https://medium.com/@pinapathrunisaikiran/kubernetes-metricsserver-horizontal-pod-autoscaling-179e244d365f).
