@@ -168,4 +168,5 @@ kubectl taint nodes <node-name> node.kubernetes.io/not-ready-
 ## Conclusion
 
 You've successfully set up a 3-node Kubernetes cluster with `kubeadm` on AWS EC2. The cluster includes one master node and two worker nodes. Pods can now communicate across the cluster using the Calico CNI.
+
 ```
