@@ -1,7 +1,7 @@
 # Rancher (RKE Engine) Setup Guide
 
 ## **Introduction to Rancher**
-Rancher is a complete Kubernetes management platform that simplifies the deployment and management of Kubernetes clusters in production environments. In this guide, we will walk through deploying a Kubernetes cluster using Rancher's RKE (Rancher Kubernetes Engine).
+Rancher is a comprehensive Kubernetes management platform that streamlines the deployment and management of Kubernetes clusters in production environments. This guide provides step-by-step instructions to deploy a Kubernetes cluster using Rancher's RKE (Rancher Kubernetes Engine).
 
 ## **Setup Requirements**
 
