@@ -148,3 +148,4 @@ Rancher is a complete Kubernetes management platform that simplifies the deploym
    ```bash
    kubectl --kubeconfig=kube_config_cluster.yml get nodes
    ```
+
