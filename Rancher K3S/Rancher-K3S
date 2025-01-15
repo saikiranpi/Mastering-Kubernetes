@@ -1,0 +1,150 @@
+# Rancher (RKE Engine) Setup Guide
+
+## **Introduction to Rancher**
+Rancher is a complete Kubernetes management platform that simplifies the deployment and management of Kubernetes clusters in production environments. In this guide, we will walk through deploying a Kubernetes cluster using Rancher's RKE (Rancher Kubernetes Engine).
+
+## **Setup Requirements**
+
+### **Infrastructure Details**
+- **Instance Type:** T3 Medium
+- **Number of Servers:** 6
+  - **3 Masters**
+  - **3 Worker Nodes**
+- **EBS Volume:** 15GB per instance
+- **AMI:** Use an appropriate Linux AMI (Amazon Machine Image)
+
+## **Task Steps**
+
+### **Step 1: Create Instances**
+1. Launch 6 instances with T3 Medium type.
+2. Include the `User_Data` script (copied from VSCode).
+3. Assign appropriate names to the instances:
+   - `MASTER-1`, `MASTER-2`, `MASTER-3`
+   - `WORKER-1`, `WORKER-2`, `WORKER-3`
+4. Attach a 15GB EBS volume to each instance.
+
+### **Step 2: Prepare RKE Binary**
+1. Create a separate folder on your local machine.
+2. Download the RKE binary from the official GitHub releases page:
+   - `rke.windows.amd64`
+   - Save it as `rke.exe`.
+3. Open the folder containing `rke.exe` in VSCode.
+
+### **Step 3: Create `cluster.yml` File**
+1. In the same directory as `rke.exe`, create a new file named `cluster.yml`.
+2. Copy and paste the following sample configuration code into `cluster.yml`:
+   ```yaml
+   cluster_name: <Your_Cluster_Name>
+   cluster_version: <Kubernetes_Version>
+   nodes:
+     - address: <Master1_IP>
+       user: ubuntu
+       role: [controlplane,etcd]
+     - address: <Master2_IP>
+       user: ubuntu
+       role: [controlplane,etcd]
+     - address: <Master3_IP>
+       user: ubuntu
+       role: [controlplane,etcd]
+     - address: <Worker1_IP>
+       user: ubuntu
+       role: [worker]
+     - address: <Worker2_IP>
+       user: ubuntu
+       role: [worker]
+     - address: <Worker3_IP>
+       user: ubuntu
+       role: [worker]
+   services:
+     kube-api:
+       load_balancer:  
+         address: <Load_Balancer_DNS>
+   ```
+3. Update the following fields:
+   - **Cluster Name**
+   - **Cluster Version**
+   - **Master and Worker IPs**
+   - **Load Balancer DNS**
+
+### **Step 4: Create Target Group and Load Balancer**
+1. **Create Target Group:**
+   - Name: `RKE_MASTER_TG`
+   - Protocol: TCP
+   - Port: 6443
+   - VPC: Select the appropriate VPC.
+   - Add all master instances to the target group.
+
+2. **Create Load Balancer:**
+   - Type: NLB (Network Load Balancer)
+   - Name: `RKE-MASTER-LB`
+   - VPC: Select the same VPC as above.
+   - Subnets: Public subnets.
+   - Listener Protocol: TCP
+   - Listener Port: 6443
+   - Target Group: `RKE_MASTER_TG`
+
+3. **DNS Record:**
+   - Create a DNS record for the load balancer.
+   - Example: `rke.cloudvishwakarma.in`
+
+### **Step 5: Deploy the Cluster**
+1. Open a PowerShell terminal and navigate to the folder containing `rke.exe`.
+2. Run the following command:
+   ```bash
+   .\rke.exe up --ignore-docker-version
+   ```
+
+3. Once the deployment is complete, check the cluster status:
+   ```bash
+   kubectl get pods
+   ```
+4. If an error occurs, set the `KUBECONFIG` environment variable:
+   - Open `sysdm.cpl` > Advanced > Environment Variables.
+   - Add the path to the `kube_config_cluster.yml` file.
+   - Save and apply the changes.
+5. Re-run the command:
+   ```bash
+   kubectl get pods
+   ```
+
+## **Step 6: Install Rancher GUI**
+
+1. Create a new instance with the following details:
+   - **Instance Type:** T2 Medium
+   - **Name:** `Rancher_Host`
+2. Use the following `User_Data` script:
+   ```bash
+   #!/bin/bash
+   curl http://get.docker.com | sh
+   ```
+3. Once the instance is up, SSH into it and run the following commands:
+   ```bash
+   sudo snap install --classic certbot
+   certbot
+   ```
+4. Create an ACME DNS record as required.
+5. Run the following Docker command to deploy Rancher:
+   ```bash
+   docker run -d --restart=unless-stopped \
+     -p 80:80 -p 443:443 \
+     --name rancher \
+     rancher/rancher
+   ```
+
+### **Step 7: Create DNS Record for Rancher**
+1. Create a DNS record:
+   - Name: `rancher`
+   - Point it to the IP of `Rancher_Host`.
+
+2. Access the Rancher GUI using the DNS record.
+3. Retrieve the password for Rancher by running the following command:
+   ```bash
+   docker ps
+   docker logs <container_id>
+   ```
+
+### **Final Check**
+1. Run the following command to verify the cluster nodes:
+   ```bash
+   kubectl --kubeconfig=kube_config_cluster.yml get nodes
+   ```
