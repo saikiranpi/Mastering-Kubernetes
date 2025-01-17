@@ -1,0 +1,61 @@
+# https://github.com/rancher/rke/releases/download/v1.6.5/rke_windows-amd64.exe
+ssh_key_path: D:\Mine\awskeys\SecOps-Key.pem
+cluster_name: rkecluster
+kubernetes_version: v1.30.7-rancher1-1
+nodes:
+  - address: 3.231.215.69
+    hostname_override: master01
+    #internal_address: 172.16.22.12
+    user: ubuntu
+    role: [controlplane, worker, etcd]
+  - address: 3.231.165.189
+    hostname_override: master02
+    #internal_address: 172.16.32.37
+    user: ubuntu
+    role: [controlplane, worker, etcd]
+  - address: 44.203.52.85
+    hostname_override: master03
+    #internal_address: 172.16.42.73
+    user: ubuntu
+    role: [controlplane, worker, etcd]
+  - address: 44.192.116.162
+    hostname_override: worker01
+    #internal_address: 172.16.42.73
+    user: ubuntu
+    role: [worker]
+  - address: 44.202.188.188
+    hostname_override: worker02
+    #internal_address: 172.16.42.73
+    user: ubuntu
+    role: [worker]
+  - address: 44.200.201.42
+    hostname_override: worker03
+    #internal_address: 172.16.42.73
+    user: ubuntu
+    role: [worker]
+
+authentication:
+  strategy: x509
+  sans:
+    - "LB-RKE-2a2c52e1c77fbbee.elb.us-east-1.amazonaws.com"
+    - "rke.cloudvishwakarma.in"
+services:
+  etcd:
+    snapshot: true
+    creation: 6h
+    retention: 24h
+
+# Required for external TLS termination with
+# ingress-nginx v0.22+
+ingress:
+  provider: nginx
+  options:
+    use-forwarded-headers: "true"
+
+network:
+  plugin: flannel
+  options:
+    flannel_iface: eth0
+    flannel_backend_type: vxlan
+    flannel_autoscaler_priority_class_name: system-cluster-critical # Available as of RKE v1.2.6+
+    flannel_priority_class_name: system-cluster-critical # Available as of RKE v1.2.6+
