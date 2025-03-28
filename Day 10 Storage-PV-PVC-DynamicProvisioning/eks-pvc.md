@@ -29,14 +29,14 @@ eksctl version
 1.   Associating IAM OIDC Provider with my cluster
 
 '''sh
-    eksctl utils associate-iam-oidc-provider --cluster <Cluster-name>  --approve --region us-east-2
+eksctl utils associate-iam-oidc-provider --cluster <Cluster-name>  --approve --region us-east-2
 '''
     - •	Check the Identity providers  in IAM an new OIDC will be created
 
 2.  Creating IAM role with the necessary permissions for the EBS CSI Driver and sets up a trust relationship between this IAM role and the Kubernetes service account.
 
 '''sh
-    eksctl create iamserviceaccount \
+eksctl create iamserviceaccount \
   --name ebs-csi-controller-sa \
   --namespace kube-system \
   --cluster <Cluster-name> \
