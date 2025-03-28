@@ -1,7 +1,8 @@
 DNS NAME
 S3 BUCKET 
+CREATE A EC2 WITH T2.MEDIUM
 IAM ROLE AND ASSIGN IT TO EC2 
-CREATE A EC2 INSTANCE AND GENERATE SSH ROLE
+CONNECT TO  EC2 INSTANCE AND GENERATE SSH ROLE  
 download Kops and Kubectl to usr/local/bin and change permissions.
 
 # Download Kubectl and give permissions.
