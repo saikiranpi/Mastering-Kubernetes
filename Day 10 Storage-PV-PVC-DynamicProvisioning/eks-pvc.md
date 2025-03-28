@@ -10,32 +10,32 @@ sudo ./aws/install
 aws configure
  ```
 2.  **Install Kubectl**
-      ```sh
+```sh
 curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.19.6/2021-01-05/bin/linux/amd64/kubectl
 chmod +x ./kubectl
 sudo mv ./kubectl /usr/local/bin
 kubectl version --short --client
-      ```
+ ```
 
 3.   **Install eksctl**
-     ```sh
+```sh
 curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
 sudo mv /tmp/eksctl /usr/local/bin
 eksctl version
-      ```
+```
 
 #For PVCs Dynamic Provisioning
 
 1.   Associating IAM OIDC Provider with my cluster
 
-    '''sh
+'''sh
     eksctl utils associate-iam-oidc-provider --cluster <Cluster-name>  --approve --region us-east-2
-    '''
+'''
     - •	Check the Identity providers  in IAM an new OIDC will be created
 
 2.  Creating IAM role with the necessary permissions for the EBS CSI Driver and sets up a trust relationship between this IAM role and the Kubernetes service account.
 
-    '''sh
+'''sh
     eksctl create iamserviceaccount \
   --name ebs-csi-controller-sa \
   --namespace kube-system \
@@ -45,16 +45,16 @@ eksctl version
   --role-only \
   --role-name AmazonEKS_EBS_CSI_Driver_Role \
   --region us-east-2
-    '''
+  '''
 
     •	The above command is responsible for creating a role in your AWS IAM
 •	Here policy named AmazonEBSCSIDriverPolicy is already present in AWS account
 •	You are creating a role named AmazonEKS_EBS_CSI_Driver_Role  with above policy.
 
 3.  Install the AWS EBS CSI Driver Addon
-    '''sh
+'''sh
     eksctl create addon --name aws-ebs-csi-driver --cluster <Your-cluster-name> --service-account-role-arn arn:aws:iam::<Your-account-ID>:role/AmazonEKS_EBS_CSI_Driver_Role --region us-east-2 --force
-    '''
+'''
 
     •	Here in the above command we are installing a add-on named aws-ebs-csi-driver which is responsible for creating a volume for us from EKS
 •	In detail explanation will be given in this dox at ending.
