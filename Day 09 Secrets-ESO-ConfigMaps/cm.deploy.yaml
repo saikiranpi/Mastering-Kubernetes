@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: newnginx
+  name: newnginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: newnginx
+  template:
+    metadata:
+      labels:
+        app: newnginx
+    spec:
+      containers:
+      - image: nginx:latest
+        name: nginx
+        ports:
+          - containerPort: 9999
+        volumeMounts:
+          - mountPath: "/etc/nginx/conf.d/"
+            name: nginxconfvol
+      volumes:
+        - name: nginxconfvol
+          configMap:
+            name: default.conf

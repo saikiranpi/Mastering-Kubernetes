@@ -1,0 +1,34 @@
+#AWS Credentails in a file and create secret
+#we are literally Mounting the secrets to volume here , So dont give the key in a excrypted here
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: aws-creds-in-file
+type: Opaque
+stringData:
+  credentials: |
+    [default]
+    aws_access_key_id = ACCESSKEYHERE 
+    aws_secret_access_key = SECRETEKEYHERE
+
+
+#Mount AWS Credentails as a volume
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: secret-test-pod-1
+spec:
+  containers:
+    - name: aws-cli-container
+      image: kiran2361993/troubleshootingtools:v1
+      volumeMounts:
+        - name: secret-volume
+          mountPath: /root/.aws/credentials
+          subPath: credentials
+          readOnly: true
+  volumes:
+    - name: secret-volume
+      secret:
+        secretName: aws-creds-in-file
