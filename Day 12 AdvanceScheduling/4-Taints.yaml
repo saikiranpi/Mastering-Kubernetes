@@ -9,19 +9,19 @@ spec:
   selector:
     matchLabels:
       app: app1
-template:
-  metadata:
-    labels:
-      app: app1
-  spec:
-    containers:
+  template:
+    metadata:
+      labels:
+        app: app1
+    spec:
+      containers:
       - image: nginx:latest
         name: nginx
-    tolerations:
+      tolerations:
       - key: "high-cpu"
         operator: "Equal"
         value: "yes"
-        effect: "NoExecute"
+        effect: "NoSchedule"
 
 ---
 apiVersion: apps/v1
@@ -35,15 +35,15 @@ spec:
   selector:
     matchLabels:
       app: app2
-template:
-  metadata:
-    labels:
-      app: app2
-  spec:
-    containers:
+  template:
+    metadata:
+      labels:
+        app: app2
+    spec:
+      containers:
       - image: nginx:latest
         name: nginx
-    tolerations:
+      tolerations:
       - key: "med-cpu"
         operator: "Equal"
         value: "yes"
