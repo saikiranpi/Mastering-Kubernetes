@@ -1,6 +1,10 @@
 ![title-deploying-secure-kubernetes-ingress-with-ssl--yKaGY7MRR6OuKgx91mzOg-t2i_oA8oTZ2jrB9hh6dHFA](https://github.com/user-attachments/assets/145269ff-f908-41ff-ae3f-9d05facc67df)
 
+# Installing certbot
+sudo snap install --classic certbot
 
+certbot certonly --manual --preferred-challenge=dns --key-type rsa --email aduttaroy281@gmail.com \
+--server https://acme-v02.api.letsencrypt.org/directory --agree-tos -d *.anishdev.in
 
 # Kubernetes Ingress Controllers Setup
 
